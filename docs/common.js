@@ -13,6 +13,9 @@ function init(response_type) {
 
     let params = new URLSearchParams(window.location.hash.substring(1));
     let id_token = params.get('id_token');
+    let search = new URLSearchParams(window.location.search.substring(1));
+    let code = search.get('code');
+
     let callback = window.location.origin + window.location.pathname;
 
     if (id_token) {
@@ -23,14 +26,27 @@ function init(response_type) {
         info.innerHTML = 'User ID ' + claims.sub + ' with E-mail ' + claims.email;
         btn.href = window.location.pathname;
         btn.innerText = 'Logout'
+    } else if (code) {
+        let info = document.getElementById('info');
+        info.innerHTML =  '<pre>' + code + '</pre>';
+        btn.href = window.location.pathname;
+        btn.innerText = 'Logout'
     } else {
-        btn.href = 'https://webexapis.com/v1/authorize?'+
+        fetch('/clientId').then(response => response.json()).then(data => {
+            if (!data.clientId || !data.scopes || !data.webexBase) {
+                console.error('Missing clientId, scopes or webexBase');
+                return;
+            }                
+            btn.href = data.webexBase + '/v1/authorize?'+
             'response_type=' + response_type +
-            '&client_id=Cf65ef9d4495665e67da03e5993453c208149242d5ede68328b75f2bdef6ccfb4'+
+            '&client_id=' + data.clientId+
             '&redirect_uri='+ callback +
-            '&scope=openid%20email'+
+            '&scope='+ data.scopes+
             '&state=' + Math.random() +
             '&nonce=' + Math.random();
         btn.innerText = "Login"
+        }).catch(error => {
+            console.error('Error:', error);
+        });
     }
 }
