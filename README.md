@@ -17,9 +17,9 @@ To start the server run:
 `npm start`
 
 Optional parameters are:
-WEBEX_BASE=https://integration.webexapis.com
-SCOPES='spark:kms'
-CLIENT_ID=example (create a new integration app to get a client id from the webex developer portal)
+- `WEBEX_BASE=https://integration.webexapis.com`
+- `SCOPES='spark:kms'`
+- `CLIENT_ID='example'` Note: create a new integration app to get a client id from the webex developer portal
 
 For example:
 `PORT=4000 WEBEX_BASE=https://integration.webexapis.com SCOPES='spark:kms' CLIENT_ID=example npm start`
